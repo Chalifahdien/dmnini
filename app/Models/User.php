@@ -6,22 +6,34 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable;
+    use HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-    ];
+    protected $table = 'users';
+    protected $primaryKey = 'id_pengguna';
+    protected $fillable = ['nama_lengkap', 'email', 'telepon', 'password', 'foto_profil', 'id_peran'];
+
+    public function peran()
+    {
+        return $this->belongsTo(Peran::class, 'id_peran');
+    }
+
+    public function pekerjaan()
+    {
+        return $this->hasMany(Pekerjaan::class, 'id_pengguna');
+    }
+
+    public function pekerjaanAktif()
+    {
+        return $this->hasOne(Pekerjaan::class, 'id_pengambil')->where('is_active', true);
+    }
 
     /**
      * The attributes that should be hidden for serialization.
@@ -34,12 +46,15 @@ class User extends Authenticatable
     ];
 
     /**
-     * The attributes that should be cast.
+     * Get the attributes that should be cast.
      *
-     * @var array<string, string>
+     * @return array<string, string>
      */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-        'password' => 'hashed',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+        ];
+    }
 }

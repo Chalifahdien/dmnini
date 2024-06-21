@@ -39,7 +39,7 @@ class UserFactory extends Factory
             'nama_lengkap' => 'admin1',
             'email' => 'admin1@gmail.com',
             'telepon' => $this->faker->phoneNumber(),
-            'password' => bcrypt('password'),
+            'password' => bcrypt('adminpassword'),
             'foto_profil' => $this->faker->imageUrl(),
             'id_peran' => 1,
             'tanggal_dibuat' => now(),
